@@ -1,0 +1,20 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="archetypes.z3crelationfield">
+
+    <five:registerPackage package="." initialize=".initialize" />
+
+    <!-- profiles -->
+
+    <genericsetup:registerProfile
+        name="demo"
+        title="ZCRelationField Demo Types"
+        directory="profiles/demo"
+        description="Installs demonstration content types for ZCRelationField."
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    />
+
+</configure>
