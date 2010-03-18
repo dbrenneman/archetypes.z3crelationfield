@@ -3,5 +3,6 @@
   <version>0.1a1</version>
   <dependencies>
     <dependency>profile-archetypes.z3crelationfield:default</dependency>
+    <dependency>profile-example.dexterity:default</dependency>
   </dependencies>
 </metadata>
