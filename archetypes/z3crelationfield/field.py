@@ -1,7 +1,10 @@
 from zope.interface import implements
 from zope.component import getUtility
+
 from zope.intid.interfaces import IIntIds
+
 from z3c.relationfield.relation import RelationValue
+
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.interfaces import IDynamicType
 from Products.Archetypes.Registry import registerField
@@ -9,6 +12,7 @@ from Products.Archetypes.public import ObjectField, ReferenceField
 from Products.Archetypes import PloneMessageFactory as _
 from Products.Archetypes.utils import DisplayList
 from archetypes.z3crelationfield.interfaces import IZCRelationField
+
 from plone.indexer import indexer
 
 

@@ -28,6 +28,7 @@ def addRelations(obj, event):
     for name, relation in _relations(obj):
         _setRelation(obj, name, relation)
 
+
 # zope.app.intid dispatches a normal event, so we need to check that
 # the object has relations.  This adds a little overhead to every
 # intid registration, which would not be needed if an object event
@@ -127,7 +128,7 @@ def _potential_relations(obj):
     If this is a IRelationList attribute, index will contain the index
     in the list. If it's a IRelation attribute, index will be None.
     """
-
+    import pdb; pdb.set_trace() # FIXME
     for field in obj.Schema().fields():
         if not IZCRelationField.providedBy(obj):
             continue

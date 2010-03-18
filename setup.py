@@ -25,7 +25,13 @@ setup(name='archetypes.z3crelationfield',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'plone.app.intid',
+          'z3c.relationfield',
+          'zope.intid',
+          'zope.app.intid',
+          'grokcore.component',
           'collective.testcaselayer>=1.3',
+          'example.dexterity',
           ],
       entry_points="""
       # -*- Entry points: -*-
