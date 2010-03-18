@@ -22,8 +22,8 @@ grab the intid tool so we can do intid lookups on objects:
 now we can make sure that the vocabulary returns intids:
 
     >>> vocab = atct1.Vocabulary('zcrelations')[0]
-
-    >>> vocab.getValue(str(intid_tool.getId(portal['front-page'])))
+    >>> front_page = portal['front-page']
+    >>> vocab.getValue(str(intid_tool.getId(front_page)))
     u'Welcome to Plone'
 
     >>> vocab.getValue(str(intid_tool.getId(dex1)))
@@ -55,6 +55,56 @@ like the archetypes reference field, you can set a value of none:
 
     >>> atct1.setZcrelations(None)
     >>> atct1.getZcrelations()
-    
 
+You can also use this field to set relations to ATCT:
+
+    >>> atct1.setZcrelations(front_page)
+    >>> atct1.zcrelations
+    <z3c.relationfield.relation.RelationValue object at ...>
+
+let's test the getRaw method:
+
+    >>> atct1.getRawZcrelations() == str(intid_tool.getId(front_page))
+    True
+
+open a browser and log in as a user who can edit this content:    
+
+    >>> from Products.Five.testbrowser import Browser
+    >>> from Products.PloneTestCase import ptc
+    >>> browser = Browser()
+    >>> browser.handleErrors = False
+    >>> browser.addHeader('Authorization', 'Basic %s:%s' % (
+    ...     ptc.default_user, ptc.default_password))
+
+now we test the basic AT reference widget:
+
+    >>> browser.open(atct1.absolute_url() + '/edit')
+
+the current value of the field is selected by default:
+
+    >>> browser.getControl(front_page.Title()).selected
+    True
+
+    >>> browser.getControl(dex1.Title()).selected
+    False
+
+select another value and save the change:
+
+    >>> browser.getControl(dex1.Title()).selected = True
+
+    >>> browser.getControl('Save').click()
+
+now the field value has changed:
+
+    >>> print browser.contents
+    <...
+                <dd>Changes saved.</dd>
+    ...
+          <label class="formQuestion"><span>ZC Relations</span>:</label>
+    <br />
+                <a href="http://nohost/plone/Members/test_user_1_/dexterity_1"     class="example.ttwpage">Dexterity 1</a>
+    ...
+
+    >>> atct1.getZcrelations()
+    <Item at /plone/Members/test_user_1_/dexterity_1>
 

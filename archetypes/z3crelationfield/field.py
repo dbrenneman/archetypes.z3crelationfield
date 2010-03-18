@@ -50,14 +50,17 @@ class ZCRelationField(ReferenceField):
     def getRaw(self, instance, aslist=False, **kwargs):
         """
         """
-        res = ObjectField.getRaw(self, instance, **kwargs)
+        res = ObjectField.get(self, instance, **kwargs)
+
+        if res is None:
+            return res
 
         if self.multiValued:
             resolved = []
             for rel in res:
-                resolved.append(rel.to_id)
+                resolved.append(str(rel.to_id))
         else:
-            resolved = res.to_id
+            resolved = str(res.to_id)
             if aslist:
                 resolved = [resolved]
 
@@ -72,9 +75,11 @@ class ZCRelationField(ReferenceField):
 
         if self.multiValued and not isinstance(value, (list, tuple)):
             value = value,
-        if isinstance(value, (list, tuple)) and not self.multiValued:
-            raise ValueError(
-                "Multiple values given for single valued field %r" % self)
+        elif not self.multiValued and isinstance(value, (list, tuple)):
+            if len(value) > 1:
+                raise ValueError(
+                    "Multiple values given for single valued field %r" % self)
+            value = value[0]
 
         intid_tool = getUtility(IIntIds)
 

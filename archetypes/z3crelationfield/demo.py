@@ -20,6 +20,7 @@ class ZCRelationFieldDemoContent(ATCTContent):
             enforceVocabulary=True,
             widget=ReferenceWidget(
                 label='ZC Relations',
+                macro_view='zcrelations_widget/index',
             ),
         ),
     ))

@@ -1,0 +1,57 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="plone">
+
+  <head><title></title></head>
+
+  <body>
+
+    <metal:view_macro define-macro="view">
+      <tal:define define="refs accessor;"
+                  condition="nocall:refs">
+
+        <tal:block tal:condition="not:field/multiValued"
+               tal:define="obj nocall:refs;
+                           href obj/absolute_url;">
+
+            <a href="#"
+               tal:attributes="href href;
+                               class python:obj.portal_type.replace(' ', '_')"
+               tal:content="python:obj.Title() or obj.absolute_url(relative=1)">
+              Sole target object's title
+            </a>
+
+            <a href="#"
+               tal:attributes="href href;
+                               class python:obj.portal_type.replace(' ', '_')"
+               tal:content="field/relationship">
+              reference object link
+            </a>
+
+        </tal:block>
+
+        <ul tal:condition="field/multiValued">
+          <li tal:repeat="obj nocall:refs">
+            <a href="#"
+               tal:attributes="href href;
+                               class python:obj.portal_type.replace(' ', '_')"
+               tal:content="python:obj.Title() or obj.absolute_url(relative=1)">
+              Target Title
+            </a>
+            
+            <a href="#"
+               tal:attributes="href href;
+                               class python:obj.portal_type.replace(' ', '_')"
+               tal:content="field/relationship">
+              reference object link
+            </a>
+          </li>
+        </ul>
+        
+      </tal:define>
+    </metal:view_macro>
+    
+  </body>
+</html>
