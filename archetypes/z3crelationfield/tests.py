@@ -7,8 +7,8 @@ from Products.PloneTestCase import ptc
 from archetypes.z3crelationfield.testing import demo_layer
 
 optionflags = (doctest.ELLIPSIS |
-               doctest.NORMALIZE_WHITESPACE |
-               doctest.REPORT_ONLY_FIRST_FAILURE)
+               doctest.NORMALIZE_WHITESPACE
+               )
 
 
 def test_suite():
