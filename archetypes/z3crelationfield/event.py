@@ -1,47 +1,29 @@
-import grokcore.component as grok
-
 from zope import component
-from zope.event import notify
 from zope.app.intid.interfaces import (IIntIds,
-                                       IIntIdRemovedEvent,
                                        IIntIdAddedEvent)
 from zope.app.container.interfaces import IObjectRemovedEvent
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
-from zope.lifecycleevent import ObjectModifiedEvent
 
 from zc.relation.interfaces import ICatalog
 
-from z3c.relationfield.interfaces import (IHasOutgoingRelations,
-                                          IHasIncomingRelations,
-                                          IRelation, IRelationList,
-                                          IRelationValue,
-                                          ITemporaryRelationValue)
+from z3c.relationfield.interfaces import IRelationValue
+from z3c.relationfield import event as rel_event
 
-from archetypes.z3crelationfield.interfaces import IZCRelationField
+from archetypes.z3crelationfield import interfaces
 
 
+@component.adapter(interfaces.IATHasOutgoingRelations,
+                  IIntIdAddedEvent)
 def addRelations(obj, event):
     """Register relations.
 
     Any relation object on the object will be added.
     """
     for name, relation in _relations(obj):
-        _setRelation(obj, name, relation)
+        rel_event._setRelation(obj, name, relation)
 
-
-# zope.app.intid dispatches a normal event, so we need to check that
-# the object has relations.  This adds a little overhead to every
-# intid registration, which would not be needed if an object event
-# were dispatched in zope.app.intid.
-@grok.subscribe(IIntIdAddedEvent)
-def addRelationsEventOnly(event):
-    obj = event.object
-    if not IHasOutgoingRelations.providedBy(obj):
-        return
-    addRelations(obj, event)
-
-
-@grok.subscribe(IHasOutgoingRelations, IObjectRemovedEvent)
+@component.adapter(interfaces.IATHasOutgoingRelations,
+                  IObjectRemovedEvent)
 def removeRelations(obj, event):
     """Remove relations.
 
@@ -59,7 +41,8 @@ def removeRelations(obj, event):
                 # The relation value has already been unindexed.
                 pass
 
-@grok.subscribe(IHasOutgoingRelations, IObjectModifiedEvent)
+@component.adapter(interfaces.IATHasOutgoingRelations,
+                  IObjectModifiedEvent)
 def updateRelations(obj, event):
     """Re-register relations, after they have been changed.
     """
@@ -86,29 +69,6 @@ def updateRelations(obj, event):
     # add new relations
     addRelations(obj, event)
 
-
-def _setRelation(obj, name, value):
-    """Set a relation on an object.
-
-    Sets up various essential attributes on the relation.
-    """
-    # if the Relation is None, we're done
-    if value is None:
-        return
-    # make sure relation has a __parent__ so we can make an intid for it
-    value.__parent__ = obj
-    # also set from_object to parent object
-    value.from_object = obj
-    # and the attribute to the attribute name
-    value.from_attribute = name
-    # now we can create an intid for the relation
-    intids = component.getUtility(IIntIds)
-    id = intids.register(value)
-    # and index the relation with the catalog
-    catalog = component.getUtility(ICatalog)
-    catalog.index_doc(id, value)
-
-
 def _relations(obj):
     """Given an object, return tuples of name, relation value.
 
@@ -128,9 +88,8 @@ def _potential_relations(obj):
     If this is a IRelationList attribute, index will contain the index
     in the list. If it's a IRelation attribute, index will be None.
     """
-    import pdb; pdb.set_trace() # FIXME
     for field in obj.Schema().fields():
-        if not IZCRelationField.providedBy(obj):
+        if not interfaces.IZCRelationField.providedBy(obj):
             continue
 
         name = field.getName()
