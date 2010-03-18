@@ -14,10 +14,10 @@ class ZCRelationFieldDemoContent(ATCTContent):
     schema = ATContentTypeBaseSchema.copy() + Schema((
         ZCRelationField(
             'zcrelations',
-            role = 'Owner',
-            relationship = 'foo',
-            widget = ReferenceWidget(
-                label = 'ZC Relations',
+            role='Owner',
+            relationship='foo',
+            widget=ReferenceWidget(
+                label='ZC Relations',
             ),
         ),
     ))

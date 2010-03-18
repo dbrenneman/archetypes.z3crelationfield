@@ -1,0 +1,31 @@
+.. -*-doctest-*-
+
+==============================================
+Fields that can relate ATCT to Dexterity Types
+==============================================
+
+start with a couple objects.
+
+    >>> dex1 = folder.dexterity_1
+    >>> atct1 = folder.atct_1
+
+the accessor returns the default value before relations have been created:
+
+    >>> atct1.getZcrelations()
+
+we can set a relationship from the Dexterity type object to the ATCT object:
+
+    >>> atct1.setZcrelations(dex1)
+
+once set, the original object can be retrieved using the field:
+
+    >>> atct1.getZcrelations()
+    <Item at /plone/Members/test_user_1_/dexterity_1>
+
+like the archetypes reference field, you can set a value of none:
+
+    >>> atct1.setZcrelations(None)
+    >>> atct1.getZcrelations()
+    
+
+

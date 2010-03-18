@@ -25,7 +25,8 @@ setup(name='archetypes.z3crelationfield',
       zip_safe=False,
       install_requires=[
           'setuptools',
-      ],
+          'collective.testcaselayer>=1.3',
+          ],
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]
