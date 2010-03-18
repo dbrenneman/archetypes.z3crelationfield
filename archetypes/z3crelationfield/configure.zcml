@@ -2,19 +2,46 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="archetypes.z3crelationfield">
 
     <five:registerPackage package="." initialize=".initialize" />
+    <include package="plone.app.intid" />
+    <include package="z3c.relationfield" />
 
     <!-- profiles -->
 
     <genericsetup:registerProfile
+        name="default"
+        title="Archetypes Relation Field"
+        description="Adds support for content relationships defined using z3c.relationfield from ATCT"
+        directory="profiles/default"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        />
+
+    <genericsetup:importStep
+        name="import-relations-utils-z3crelationfield"
+        title="Import Relations Utils for z3crelationfield"
+        description="Import relation utility."
+        handler=".setuphandlers.installRelations">
+      <depends name="toolset"/>
+    </genericsetup:importStep>
+
+
+    <genericsetup:registerProfile
         name="demo"
-        title="ZCRelationField Demo Types"
+        title="Archetypes Relation Field Demo Types"
         directory="profiles/demo"
         description="Installs demonstration content types for ZCRelationField."
         provides="Products.GenericSetup.interfaces.EXTENSION"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    />
+        />
+
+    <!-- Archetypes Content will support incoming and outgoing relations -->
+    <class zcml:condition="installed Products.Archetypes"
+           class="Products.Archetypes.BaseObject.BaseObject">
+      <implements interface="z3c.relationfield.interfaces.IHasRelations" />
+    </class>
 
 </configure>

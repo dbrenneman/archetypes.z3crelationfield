@@ -1,5 +1,5 @@
 from Products.Archetypes.public import ReferenceWidget, Schema, registerType
-from archetypes.z3crelationfield import ZCRelationField
+from archetypes.z3crelationfield.field import ZCRelationField
 
 from Products.ATContentTypes.content.base import ATCTContent
 from Products.ATContentTypes.content.schemata import ATContentTypeBaseSchema
@@ -13,10 +13,11 @@ class ZCRelationFieldDemoContent(ATCTContent):
 
     schema = ATContentTypeBaseSchema.copy() + Schema((
         ZCRelationField(
-            'relations',
+            'zcrelations',
             role = 'Owner',
+            relationship = 'foo',
             widget = ReferenceWidget(
-                label = 'Relations',
+                label = 'ZC Relations',
             ),
         ),
     ))
