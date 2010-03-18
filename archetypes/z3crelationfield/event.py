@@ -96,7 +96,7 @@ def _potential_relations(obj):
         if not interfaces.IZCRelationField.providedBy(obj):
             continue
 
-        name = field.getName()
+        name = field.relationship
         value = field.getAccessor(obj)()
 
         if not (isinstance(value, (list, tuple))
