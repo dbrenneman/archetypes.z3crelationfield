@@ -22,6 +22,7 @@ def addRelations(obj, event):
     for name, relation in _relations(obj):
         rel_event._setRelation(obj, name, relation)
 
+
 @component.adapter(interfaces.IATHasOutgoingRelations,
                   IObjectRemovedEvent)
 def removeRelations(obj, event):
@@ -41,6 +42,7 @@ def removeRelations(obj, event):
                 # The relation value has already been unindexed.
                 pass
 
+
 @component.adapter(interfaces.IATHasOutgoingRelations,
                   IObjectModifiedEvent)
 def updateRelations(obj, event):
@@ -59,15 +61,17 @@ def updateRelations(obj, event):
         # The object has not been added to the ZODB yet
         return
 
-    # remove previous relations coming from id (now have been overwritten)
-    # have to activate query here with list() before unindexing them so we don't
-    # get errors involving buckets changing size
+    # remove previous relations coming from id (now have been
+    # overwritten) have to activate query here with list() before
+    # unindexing them so we don't get errors involving buckets
+    # changing size
     rels = list(catalog.findRelations({'from_id': obj_id}))
     for rel in rels:
         catalog.unindex(rel)
 
     # add new relations
     addRelations(obj, event)
+
 
 def _relations(obj):
     """Given an object, return tuples of name, relation value.
