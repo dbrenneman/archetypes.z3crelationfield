@@ -85,7 +85,7 @@ class ZCRelationField(ReferenceField):
                 if isinstance(v, (basestring, int)):
                     result.append(RelationValue(int(v)))
                 else:
-                    result.append(RelationValue(intid_tool.getID(v)))
+                    result.append(RelationValue(intid_tool.getId(v)))
         else:
             if isinstance(value, (basestring, int)):
                 result = RelationValue(int(value))
@@ -119,7 +119,7 @@ class ZCRelationField(ReferenceField):
             label = lambda b: self._brains_title_or_id(b, content_instance)
 
         for b in pc_brains:
-            pairs.append((b.intid, label(b)))
+            pairs.append((str(b.intid), label(b)))
 
         if not self.required and not self.multiValued:
             no_reference = _(u'label_no_reference',

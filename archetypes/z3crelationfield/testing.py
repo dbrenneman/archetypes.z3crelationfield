@@ -2,7 +2,8 @@ from Testing import ZopeTestCase
 from collective.testcaselayer import ptc, common
 
 from example.dexterity.tests import test_integration
-test_integration # importing initiates setup
+test_integration  # importing initiates setup
+
 
 class DemoLayer(ptc.BasePTCLayer):
     """
@@ -17,6 +18,7 @@ class DemoLayer(ptc.BasePTCLayer):
         test_integration  # import installs example Dexterity types
         ZopeTestCase.installPackage('archetypes.z3crelationfield')
         self.addProfile('archetypes.z3crelationfield:demo')
+        self.portal.portal_catalog.refreshCatalog()
         self.login()
         self.folder.invokeFactory(
             type_name='example.ttwpage',

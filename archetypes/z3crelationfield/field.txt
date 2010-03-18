@@ -13,6 +13,35 @@ the accessor returns the default value before relations have been created:
 
     >>> atct1.getZcrelations()
 
+grab the intid tool so we can do intid lookups on objects:
+
+    >>> from zope.component import getUtility
+    >>> from zope.intid.interfaces import IIntIds
+    >>> intid_tool = getUtility(IIntIds)
+
+now we can make sure that the vocabulary returns intids:
+
+    >>> vocab = atct1.Vocabulary('zcrelations')[0]
+
+    >>> vocab.getValue(str(intid_tool.getId(portal['front-page'])))
+    u'Welcome to Plone'
+
+    >>> vocab.getValue(str(intid_tool.getId(dex1)))
+    u'Dexterity 1'
+
+make sure that the folder is not in the vocabulary:
+
+    >>> folder_intid = intid_tool.getId(folder)
+    >>> str(folder_intid) in vocab
+    False
+
+make sure we can't make a relationship to something that isn't in the vocabulary:
+
+    >>> field = atct1.getField('zcrelations')
+    >>> field.validate(str(folder_intid), atct1)
+    u"Values ['...'] are not allowed for vocabulary of element ZC Relations."
+    
+
 we can set a relationship from the Dexterity type object to the ATCT object:
 
     >>> atct1.setZcrelations(dex1)

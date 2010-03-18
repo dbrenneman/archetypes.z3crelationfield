@@ -16,6 +16,8 @@ class ZCRelationFieldDemoContent(ATCTContent):
             'zcrelations',
             role='Owner',
             relationship='foo',
+            allowed_types=('Document', 'example.ttwpage'),
+            enforceVocabulary=True,
             widget=ReferenceWidget(
                 label='ZC Relations',
             ),
